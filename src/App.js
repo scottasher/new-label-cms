@@ -1,26 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.less';
+import routes from './config/main.routes';
+import MainIndex from './layouts/MainIndex';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App(props) {
+    const routeComponents = routes.map((route, key) => {
+        console.log(routes)
+        if (!route.routes) {
+            return <MainIndex exact path={route.path} component={route.component} key={key} />
+        } 
+        return route.routes.map(r => {
+            return <MainIndex exact path={r.path} component={r.component} key={r.path} />
+        });
+    });
+    return (
+        <>
+            {routeComponents}
+        </>
+    );
 }
 
 export default App;
