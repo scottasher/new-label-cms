@@ -44,7 +44,7 @@ function Articles(props) {
             dataIndex: 'tags',
             render: tags => (
                 <span>
-                    {tags.split(',').map(tag => {
+                    {tags.map(tag => {
                         return (
                             <Tag key={tag}>
                                 {tag.toUpperCase()}

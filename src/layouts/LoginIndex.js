@@ -3,9 +3,9 @@ import LoginLayout from './LoginLayout';
 import Media from 'react-media';
 import { Route, Redirect } from 'react-router-dom';
 
-export default function LoginIndex({ component: Component, location, ...rest }) {
+export default function LoginIndex({ component: Component, user, location, ...rest }) {
     // console.log(location)
-    if(auth.active && location) {
+    if(user.active && location) {
         return <Redirect to={location.state.from} />
     }
 

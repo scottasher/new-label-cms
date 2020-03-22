@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { 
     Form, Row, Button, PageHeader, 
     Col, Card, Input, Tooltip, Icon, 
-    Select, Tag, Upload, Option
+    Select, Tag, Upload
 } from 'antd';
 import ReactQuill from 'react-quill';
 import { Link } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import './index.less';
 
+const { Option } = Select;
 const colStyles = { paddingRight: 20 };
 
 export default function NewArticle(props) {
