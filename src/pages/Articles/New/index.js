@@ -10,7 +10,7 @@ import {
     EllipsisOutlined, PlusOutlined, 
     DownOutlined, UpOutlined 
 } from '@ant-design/icons';
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import { ROOT_URL } from '../../../defaultSettings';
 import { uploadArticle } from '../../../actions/articles';
 import 'react-quill/dist/quill.snow.css';
@@ -19,9 +19,12 @@ import './index.less';
 const { Option } = Select;
 const colStyles = { paddingRight: 20 };
 const IMG_UPLOAD_URL = `${ROOT_URL}/api/articles/image`;
+let BlockEmbed = Quill.import('blots/block/embed');
+console.log(BlockEmbed)
 
 function NewArticle(props) {
     let input;
+    let quill;
     const [editorState, setEditorState] = useState('');
     const [files, setFiles] = useState([]);
     const [tags, setTags] = useState([]);
@@ -29,27 +32,30 @@ function NewArticle(props) {
     const [inputValue, setInputValue] = useState('');
     const [optionsVisible, setOptionsVisible] = useState(false);
     const [selectedMenuItem, setSelectedMenuItem] = useState('public');
+    const [dropVisible, setDropVisible] = useState(false)
 
     const handleEditorChange = (editorState) => setEditorState(editorState);
     const handleInputChange = e => setInputValue(e.target.value);
     const showInput = () => setInputVisible(true)
     const toggleOptions = () => setOptionsVisible(!optionsVisible);
-    const handlePublishChange = () => setSelectedMenuItem();
+    const handlePublishChange = (e) => {
+        setDropVisible(false)
+        setSelectedMenuItem(e.key);
+    }
     const saveInputRef = input => (input = input);
-
     const menu = (
         <Menu>
-            <Menu.Item key="m1" id="public" onClick={handlePublishChange}>
+            <Menu.Item key="public" id="public" onClick={handlePublishChange}>
                 <p>
                     {selectedMenuItem === 'public' ? <CheckOutlined /> : null} Public
                 </p>
             </Menu.Item>
-            <Menu.Item key="m2" id="private" onClick={handlePublishChange}>
+            <Menu.Item key="private" id="private" onClick={handlePublishChange}>
                 <p>
                     {selectedMenuItem === 'private' ? <CheckOutlined /> : null} Private
                 </p>
             </Menu.Item>
-            <Menu.Item key="m3" id="draft" onClick={handlePublishChange}>
+            <Menu.Item key="draft" id="draft" onClick={handlePublishChange}>
                 <p>
                     {selectedMenuItem === 'draft' ? <CheckOutlined /> : null} Draft
                 </p>
@@ -102,9 +108,18 @@ function NewArticle(props) {
         return <div>HELLO</div>
     }
 
+    const handleDropMenu = () => {
+        setDropVisible(!dropVisible)
+    }
+
     const DropdownMenu = () => {
         return (
-            <Dropdown key="more" overlay={menu}>
+            <Dropdown 
+                visible={dropVisible} 
+                onBlur={handleDropMenu} 
+                onClick={handleDropMenu} 
+                key="more" overlay={menu}
+            >
                 <Button
                     style={{ border: 'none', padding: 0 }}
                 >
@@ -153,6 +168,7 @@ function NewArticle(props) {
             Tags
         </span>
     );
+
     return (
         <Form 
             name="new-article"
@@ -203,7 +219,7 @@ function NewArticle(props) {
                             name="body"
                             rules={[{required: true,message: 'Please add a body!',},]}
                         >
-                            <ReactQuill value={editorState || ''} onChange={handleEditorChange} />
+                            <ReactQuill  onChange={handleEditorChange} />
                         </Form.Item>
                         <Form.Item
                             label="Text Snippet"
