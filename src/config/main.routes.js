@@ -7,7 +7,6 @@ export default  [
         key: 1,
         path: '/',
         name: 'dashboard',
-        icon: 'dashboard',
         title: 'Dashboard',
         layout: 'main',
         component: Dashboard
@@ -27,19 +26,20 @@ export default  [
                 layout: 'main',
             },
             {
-                path:'/articles/create',
-                name: 'create',
-                title: 'Create',
-                component: NewArticle,        
+                path:'/articles/:id',
+                name: 'new-article',
+                title: 'New Article',
+                exact: true,
+                component: NewArticle,    
                 layout: 'main',
             },
             {
-                path:'/articles/:id',
-                name: 'article',
-                title: 'Article',
+                path:'/articles/create',
+                name: 'create',
+                exact: true,
+                title: 'Create',
                 component: NewArticle,        
                 layout: 'main',
-                menuRemove: true
             },
         ]
     },

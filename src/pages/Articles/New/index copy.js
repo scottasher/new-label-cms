@@ -6,10 +6,10 @@ import {
     Select, Tag, Upload, Dropdown
 } from 'antd';
 import { 
-    InfoCircleOutlined, 
+    InfoCircleOutlined, CheckOutlined, 
     EllipsisOutlined, PlusOutlined, 
+    DownOutlined, UpOutlined 
 } from '@ant-design/icons';
-import Head from './Head';
 import ReactQuill from 'react-quill';
 import { ROOT_URL } from '../../../defaultSettings';
 import { uploadArticle, fetchArticle } from '../../../actions/articles';
@@ -56,6 +56,25 @@ function NewArticle(props) {
     }
     const saveInputRef = input => (tagInput = input);
 
+    const menu = (
+        <Menu>
+            <Menu.Item key="public" id="public" onClick={handlePublishChange}>
+                <p>
+                    {selectedMenuItem === 'public' ? <CheckOutlined /> : null} Public
+                </p>
+            </Menu.Item>
+            <Menu.Item key="private" id="private" onClick={handlePublishChange}>
+                <p>
+                    {selectedMenuItem === 'private' ? <CheckOutlined /> : null} Private
+                </p>
+            </Menu.Item>
+            <Menu.Item key="draft" id="draft" onClick={handlePublishChange}>
+                <p>
+                    {selectedMenuItem === 'draft' ? <CheckOutlined /> : null} Draft
+                </p>
+            </Menu.Item>
+        </Menu>
+    );
     const onFinish = values => {
         const newArticle = {
             title: values.title,
@@ -114,6 +133,29 @@ function NewArticle(props) {
         setDropVisible(!dropVisible)
     }
 
+    const DropdownMenu = () => {
+        return (
+            <Dropdown 
+                visible={dropVisible} 
+                onBlur={handleDropMenu} 
+                onClick={handleDropMenu} 
+                key="more" overlay={menu}
+            >
+                <Button
+                    style={{ border: 'none', padding: 0 }}
+                >
+                    <EllipsisOutlined
+                        style={{
+                            fontSize: 20,
+                            verticalAlign: 'top',
+                        }}
+                    />
+                </Button>
+            </Dropdown>
+        );
+    };
+      
+
     const handleInputConfirm = () => {
         let newTags;
         if (inputValue && tags.indexOf(inputValue) === -1) {
@@ -156,16 +198,29 @@ function NewArticle(props) {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
         >
-            <Head 
-                article={props.article} 
-                handlePublishChange={handlePublishChange} 
-                handleDropMenu={handleDropMenu}
-                dropVisible={dropVisible}
-                optionsVisible={optionsVisible}
-                loading={props.loading}
-                selectedMenuItem={selectedMenuItem}
-                setOptionsVisible={setOptionsVisible}
-            />
+            <PageHeader
+                style={{ background: '#fff', marginBottom: '13px' }}
+                className="site-page-header"
+                title="Title"
+                onBack={() => null}
+                subTitle=""
+                extra={[
+                    // <Button key="2" onClick={toggleOptions}>
+                    //     {optionsVisible ? <UpOutlined /> : <DownOutlined /> }
+                    // </Button>,
+                    <Button
+                        key="submit"
+                        type="primary" 
+                        htmlType="submit"
+                        loading={props.loading}
+                    >
+                        {props.loading ? 'Uploading...' : 'Publish'}
+                    </Button>,
+                    <DropdownMenu key="more" />,
+                ]}
+            >
+                {optionsVisible ? renderOptions(props.article) : null}
+            </PageHeader>
             <Card style={{width: '100%'}} bordered={false}>
                 <Row gutter={[16, 16]}>
                     <Col 

@@ -21,3 +21,37 @@ export function parseQuery(queryString) {
     // console.log('[PARSE QUERY RESULTS]', query)
     return query;
 }
+
+export function takeOutMenu(data) {
+    console.log(data)
+    return data.map(obj => {
+        if(!obj.routes) {
+            return {
+                key: obj.key,
+                path: obj.path,
+                name: obj.name,
+                title: obj.title,
+                layout: obj.layout,
+                component: obj.component
+            }
+        } 
+        return {
+            key: obj.path,
+            path: obj.path,
+            name: obj.name,
+            title: obj.title,
+            layout: obj.layout,
+            component: obj.component || null,
+            routes: obj.routes.map(ob => {
+                return {
+                    path: ob.path,
+                    name: ob.name,
+                    exact: ob.exact || false,
+                    title: ob.title,
+                    component: ob.component,        
+                    layout: ob.layout,
+                }
+            })
+        }
+    })
+}

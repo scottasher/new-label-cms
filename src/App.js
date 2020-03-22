@@ -2,7 +2,7 @@ import React from 'react';
 import './App.less';
 import { connect } from 'react-redux';
 import { fetchUser } from './actions/users';
-
+import { takeOutMenu } from './utils';
 import mainRoutes from './config/main.routes';
 import authRoutes from './config/auth.routes';
 
@@ -10,21 +10,25 @@ import LoginIndex from './layouts/LoginIndex';
 import MainIndex from './layouts/MainIndex';
 
 function App(props) {
-    const loginRoutes = authRoutes.map((route, key) => {
+    console.log(mainRoutes)
+    console.log(takeOutMenu(mainRoutes))
+    console.log(takeOutMenu(authRoutes))
+
+    const loginRoutes = takeOutMenu(authRoutes).map((route, key) => {
         if(!route.routes) {
-            return <LoginIndex user={props.user} exact path={route.path} component={route.component} key={key} />
+            return <LoginIndex {...route} user={props.user} exact path={route.path} component={route.component} key={key} />
         }
         return authRoutes.routes.map(r => {
-            return <LoginIndex user={props.user} exact path={r.path} component={r.component} key={r.path} />
+            return <LoginIndex {...route} user={props.user} exact path={r.path} component={r.component} key={r.path} />
         });
     });
 
-    const dashboardRoutes = mainRoutes.map((route, key) => {
+    const dashboardRoutes = takeOutMenu(mainRoutes).map((route, key) => {
         if(!route.routes) {
-            return <MainIndex user={props.user} exact path={route.path} component={route.component} key={key} />
+            return <MainIndex {...route} user={props.user} exact path={route.path} component={route.component} key={key} />
         } 
         return route.routes.map(r => {
-            return <MainIndex user={props.user} exact path={r.path} component={r.component} key={r.path} />
+            return <MainIndex {...route} user={props.user} exact path={r.path} component={r.component} key={r.path} />
         });
     });
 
@@ -37,7 +41,7 @@ function App(props) {
 }
 
 function mapStateToProps({ user }) {
-    return { user };
+    return { user };    
 }
 
 export default connect(mapStateToProps, { fetchUser })(App);

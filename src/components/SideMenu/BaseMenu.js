@@ -26,6 +26,9 @@ function BaseMenu(props) {
                     </Menu.Item>
                 )
             } else if (i.routes) {
+                if(i.routes === 'new-article') {
+                    return null
+                }
                 return (
                     <SubMenu 
                         key={i.name}
