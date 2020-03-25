@@ -1,21 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { Form, Input, Checkbox, Button } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
-import { userLogin } from '../../actions/users';
 import './index.less';
 
-function LoginForm(props) {
-    const [loading, setLoading] = useState(false);
-
-    function handleFinish(e) {
-        // setLoading(true)
-        console.log(e)
-    };
-
+export default function LoginForm(props) {
     return (
-        <Form className="login-form" onFinish={handleFinish}>
+        <Form className="login-form" onFinish={props.handleLogin} onFinishFailed={props.handleFailedLogin}>
             <Form.Item name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
                 <Input
                     prefix={<MailOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -29,13 +20,18 @@ function LoginForm(props) {
                     placeholder="Password"
                 />
             </Form.Item>
+            <Form.Item style={{ display: 'none' }} name="verify">
+                <Input
+                    placeholder="Verify"
+                />
+            </Form.Item>
             <Form.Item name="remember">
                 <Checkbox className='remember'>Remember me</Checkbox>
                 <Link className="login-form-forgot" to="/employee/forgot/password">
                     Forgot password
                 </Link>
-                <Button loading={loading} type="primary" htmlType="submit" className="login-form-button">
-                    { loading ? 'Loading...' : 'Login' }
+                <Button loading={props.loading} type="primary" htmlType="submit" className="login-form-button">
+                    { props.loading ? 'Loading...' : 'Login' }
                 </Button>
                 <div>
                     <span><Link to="/">Back Home</Link></span>
@@ -45,9 +41,3 @@ function LoginForm(props) {
         </Form>
     )
 }
-
-function mapStateToProps({ loading }) {
-    return { loading }
-}
-  
-export default connect(mapStateToProps, { userLogin })(LoginForm);

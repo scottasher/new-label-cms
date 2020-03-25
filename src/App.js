@@ -2,7 +2,6 @@ import React from 'react';
 import './App.less';
 import { connect } from 'react-redux';
 import { fetchUser } from './actions/users';
-import { takeOutMenu } from './utils';
 import mainRoutes from './config/main.routes';
 import authRoutes from './config/auth.routes';
 
@@ -10,11 +9,7 @@ import LoginIndex from './layouts/LoginIndex';
 import MainIndex from './layouts/MainIndex';
 
 function App(props) {
-    console.log(mainRoutes)
-    console.log(takeOutMenu(mainRoutes))
-    console.log(takeOutMenu(authRoutes))
-
-    const loginRoutes = takeOutMenu(authRoutes).map((route, key) => {
+    const loginRoutes = authRoutes.map((route, key) => {
         if(!route.routes) {
             return <LoginIndex {...route} user={props.user} exact path={route.path} component={route.component} key={key} />
         }
@@ -23,7 +18,7 @@ function App(props) {
         });
     });
 
-    const dashboardRoutes = takeOutMenu(mainRoutes).map((route, key) => {
+    const dashboardRoutes = mainRoutes.map((route, key) => {
         if(!route.routes) {
             return <MainIndex {...route} user={props.user} exact path={route.path} component={route.component} key={key} />
         } 

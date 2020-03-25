@@ -1,60 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { 
-    Form, Row, Button, PageHeader, Menu,
-    Col, Card, Input, Tooltip, Icon, 
-    Select, Tag, Upload, Dropdown
-} from 'antd';
-import { 
-    InfoCircleOutlined, 
-    EllipsisOutlined, PlusOutlined, 
-} from '@ant-design/icons';
+import { Form, Row, Card, Tooltip, Tag, Spin, Col, Input } from 'antd';
 import Head from './Head';
+import FormRight from './FormRight';
+import { createArticle, fetchArticle, updateArticle } from '../../../actions/articles';
 import ReactQuill from 'react-quill';
-import { ROOT_URL } from '../../../defaultSettings';
-import { uploadArticle, fetchArticle } from '../../../actions/articles';
 import 'react-quill/dist/quill.snow.css';
 import './index.less';
 
-const { Option } = Select;
 const colStyles = { paddingRight: 20 };
-const IMG_UPLOAD_URL = `${ROOT_URL}/api/articles/image`;
 
 function NewArticle(props) {
-    let tagInput;
     let id;
+    const [form] = Form.useForm();
     const [editorState, setEditorState] = useState('');
     const [tags, setTags] = useState([]);
-    const [inputVisible, setInputVisible] = useState(false);
-    const [inputValue, setInputValue] = useState('');
     const [optionsVisible, setOptionsVisible] = useState(false);
     const [selectedMenuItem, setSelectedMenuItem] = useState('public');
     const [dropVisible, setDropVisible] = useState(false);
+    const [inputVisible, setInputVisible] = useState(false)
+    const [inputValue, setInputValue] = useState('')
 
     useEffect(() => {
-        id = props.match.params
+        id = props.match.params.id
         if(id) {
-            fetchArticle(id)
+            props.fetchArticle(id)
         }
+        initVals(props.article);
+    }, [props.article.id]);
 
-        if(!tagInput) {
-            
-        } else {
-            tagInput.focus()
-        }
-    })
 
-    const handleEditorChange = (editorState) => setEditorState(editorState);
-    const handleInputChange = e => setInputValue(e.target.value);
-    const showInput = (e) => {
-        setInputVisible(true);
-    }
-    const toggleOptions = () => setOptionsVisible(!optionsVisible);
+    const handleDropMenu = () => setDropVisible(!dropVisible);
+
     const handlePublishChange = (e) => {
         setDropVisible(false)
         setSelectedMenuItem(e.key);
     }
-    const saveInputRef = input => (tagInput = input);
 
     const onFinish = values => {
         const newArticle = {
@@ -62,9 +43,16 @@ function NewArticle(props) {
             body: values.body,
             textSnippet: values.textSnippet,
             category: values.category,
-            tags: tags,
-            articleImage: values.articleImage[0].name
-        }
+            tags: tags.toString(),
+            imageName: values.imageName[0].name,
+            status: selectedMenuItem
+        };
+
+        if(!props.match.params.id) {
+            return props.createArticle(newArticle, props.history)
+        } 
+        return props.updateArticle(newArticle, props.match.params.id)
+
     };
 
     const onFinishFailed = errorInfo => {
@@ -72,91 +60,61 @@ function NewArticle(props) {
     };
 
     const initVals = (data) => {
-        return {
+
+        if(!data) {
+            return 
+        }
+        setTags(data.tags);
+
+        let imgPath;
+        if(data.image && props.match.params) {
+            imgPath = [{
+                uid: '-1',
+                name: data.image.name,
+                status: 'done',
+                url: data.image.path,
+                thumbUrl: data.image.path,
+            }]
+        }
+        const init = {
             title: data.title,
             body: data.body || '',
             textSnippet: data.textSnippet,
             category: data.category,
             tags: data.tags,
-            articleImage: data.articleImage,
+            imageName: imgPath || []
         }
+        return form.setFieldsValue(init)
     }
 
-    const handleClose = removedTag => {
-        const tags = tags.filter(tag => tag !== removedTag);
-        setTags(tags);
-    };
-
-    const renderTags = (data) => {
-        const allTags = data || []
-        return allTags.map((tag, index) => {
-            const isLongTag = tag.length > 20;
-            const tagElem = (
-                <Tag key={tag} closable={index !== 0} onClose={() => handleClose(tag)}>
-                    {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                </Tag>
-            );
-            return isLongTag ? (
-                <Tooltip title={tag} key={tag}>
-                    {tagElem}
-                </Tooltip>
-            ) : (
-                tagElem
-            );
-        })
-    }
-
-    const renderOptions = () => {
-        return <div>HELLO</div>
-    }
-
-    const handleDropMenu = () => {
-        setDropVisible(!dropVisible)
-    }
-
+    const showInput = () => setInputVisible(true);
+    const handleInputChange = e => setInputValue(e.target.value);
     const handleInputConfirm = () => {
         let newTags;
-        if (inputValue && tags.indexOf(inputValue) === -1) {
+        if (inputValue && tags && tags.indexOf(inputValue) === -1) {
             newTags = [...tags, inputValue];
         }
-        if(!tags) {
-            newTags = [];
-        }
-        console.log(newTags)
-        setTags(newTags);
+        setTags(newTags || props.article.tags || []);
         setInputVisible(false);
         setInputValue('');
     };
+    const handleClose = removedTag => {
+        const newTags = tags.filter(tag => tag !== removedTag);
 
-    const normFile = e => {
-        // console.log('Upload event:', e);
-        if (Array.isArray(e)) {
-          return e;
-        }
-        return e && e.fileList;
+        setTags(newTags);
     };
-
-    const tagsLabel = (
-        <span>
-            <em>
-                <Tooltip title='Tags'>
-                    <InfoCircleOutlined style={{ marginRight: 4 }} />
-                </Tooltip>
-            </em>
-            Tags
-        </span>
-    );
 
     return (
         <Form 
+            form={form}
             name="new-article"
             layout="vertical"
-            onFinish={onFinish}
-            initialValues={initVals(props.article)}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
         >
             <Head 
+                loading={props.loading}
+                history={props.history}
                 article={props.article} 
                 handlePublishChange={handlePublishChange} 
                 handleDropMenu={handleDropMenu}
@@ -166,7 +124,7 @@ function NewArticle(props) {
                 selectedMenuItem={selectedMenuItem}
                 setOptionsVisible={setOptionsVisible}
             />
-            <Card style={{width: '100%'}} bordered={false}>
+            <Card loading={props.loading} style={{width: '100%'}} bordered={false}>
                 <Row gutter={[16, 16]}>
                     <Col 
                         style={colStyles} 
@@ -182,9 +140,12 @@ function NewArticle(props) {
                         <Form.Item
                             label="Body"
                             name="body"
-                            rules={[{required: true,message: 'Please add a body!',},]}
+                            rules={[{required: true, message: 'Please add a body!',},]}
                         >
-                            <ReactQuill value={editorState} onChange={handleEditorChange} />
+                            <ReactQuill 
+                                value={editorState}
+                                onChange={(text, delta, source, editor) => setEditorState(text)}
+                            />
                         </Form.Item>
                         <Form.Item
                             label="Text Snippet"
@@ -194,52 +155,15 @@ function NewArticle(props) {
                             <Input placeholder='Text Snippet' />
                         </Form.Item>
                     </Col>
-                    <Col xs={24} sm={24} md={8} >
-                        <Form.Item name="category" label="Category" rules={[{ required: true, message: 'Please select a category!' }]} hasFeedback>
-                            <Select
-                                showSearch
-                                placeholder="Select a category"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                            >
-                                <Option value="release"s>Releases</Option>
-                                <Option value="events">Events</Option>
-                                <Option value="miscellaneous">Miscellaneous</Option>
-                            </Select>
-                        </Form.Item>
-                        <Form.Item name="tags" label={tagsLabel}>
-                            <>
-                                {renderTags(tags)}
-                                {inputVisible && (
-                                    <Input
-                                        id="tagInput"
-                                        ref={saveInputRef}
-                                        type="text"
-                                        size="small"
-                                        value={inputValue}
-                                        style={{ width: 78 }}
-                                        onChange={handleInputChange}
-                                        onBlur={handleInputConfirm}
-                                        onPressEnter={handleInputConfirm}
-                                    />
-                                )}
-                                {!inputVisible && (
-                                    <Tag onClick={showInput} style={{ background: '#fff', borderStyle: 'dashed' }}>
-                                        <PlusOutlined/> New Tag
-                                    </Tag>
-                                )}
-                            </>
-                        </Form.Item>
-                        <Form.Item getValueFromEvent={normFile} valuePropName="fileList" name="articleImage" label="Image">
-                            <Upload name="articleImage" action={IMG_UPLOAD_URL} listType="picture">
-                                <Button>
-                                    <Icon type="upload" /> Click to upload
-                                </Button>
-                            </Upload>
-                        </Form.Item>
-                    </Col>
+                    <FormRight 
+                        currentTags={tags || []}
+                        showInput={showInput}
+                        handleInputChange={handleInputChange}
+                        handleInputConfirm={handleInputConfirm}
+                        inputVisible={inputVisible}
+                        inputValue={inputValue}
+                        handleClose={handleClose}
+                    />
                 </Row>
             </Card>
         </Form>
@@ -250,4 +174,4 @@ function mapStateToProps({ loading, article }) {
     return { loading, article }
 }
 
-export default connect(mapStateToProps, { uploadArticle, fetchArticle })(NewArticle);
+export default connect(mapStateToProps, { createArticle, updateArticle, fetchArticle })(NewArticle);

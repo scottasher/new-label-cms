@@ -22,24 +22,21 @@ export const fetchUser = () => async dispatch => {
 
 export const userLogin = (values, history, redirect) => async dispatch => {
     dispatch({ type: FETCH_LOADING, payload: true })
-    const user = { user: values };
-    const res = await request('/users/account', {
+    const res = await request('/users/login', {
         method: 'post',
-        data: user
+        data: values
     });
-    
     if(!res.data.currentAuthority) {
-        // console.log(res.data)
         setAuthority('');
         setToken('');
-        dispatch({ type: FETCH_LOADING, payload: false })
-        return createAlert(res.data) 
+        dispatch({ type: FETCH_LOADING, payload: false });
+        return createAlert(res.data);
     } 
-    // console.log('[TOKEN IN USER LOGIN ACTION]', res.data.user.token)
   
     setAuthority(res.data.currentAuthority);
     setToken(res.data.user.token);
-    
+    history.push('/dashboard');
+    dispatch({ type: FETCH_LOADING, payload: false });
     dispatch({ type: FETCH_USER, payload: res.data });
 };
 

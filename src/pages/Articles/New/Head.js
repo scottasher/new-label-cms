@@ -1,24 +1,23 @@
 import React from 'react';
 import { PageHeader, Menu, Dropdown, Button } from 'antd';
 import { EllipsisOutlined, DownOutlined, UpOutlined, CheckOutlined } from '@ant-design/icons';
-import { Redirect } from 'react-router-dom';
 
 export default (props) => {
     const toggleOptions = () => props.setOptionsVisible(!props.optionsVisible);
     const menu = (
         <Menu>
             <Menu.Item key="public" id="public" onClick={props.handlePublishChange}>
-                <p>
+                <p style={{ marginBottom: 0 }}>
                     {props.selectedMenuItem === 'public' ? <CheckOutlined /> : null} Public
                 </p>
             </Menu.Item>
             <Menu.Item key="private" id="private" onClick={props.handlePublishChange}>
-                <p>
+                <p style={{ marginBottom: 0 }}>
                     {props.selectedMenuItem === 'private' ? <CheckOutlined /> : null} Private
                 </p>
             </Menu.Item>
             <Menu.Item key="draft" id="draft" onClick={props.handlePublishChange}>
-                <p>
+                <p style={{ marginBottom: 0 }}>
                     {props.selectedMenuItem === 'draft' ? <CheckOutlined /> : null} Draft
                 </p>
             </Menu.Item>
@@ -56,7 +55,7 @@ export default (props) => {
             style={{ background: '#fff', marginBottom: '13px' }}
             className="site-page-header"
             title="Title"
-            onBack={() => <Redirect to="/articles" />}
+            onBack={(e) => props.history.push('/articles')}
             subTitle=""
             extra={[
                 <Button key="2" onClick={toggleOptions}>
@@ -68,7 +67,11 @@ export default (props) => {
                     htmlType="submit"
                     loading={props.loading}
                 >
-                    {props.loading ? 'Uploading...' : 'Publish'}
+                    {props.loading ? (
+                        props.selectedMenuItem === 'draft' ? 'Saving...' : 'Uploading...'
+                    ) : (
+                        props.selectedMenuItem === 'draft' ? 'Save Draft' : 'Publish'
+                    )}
                 </Button>,
                 <DropdownMenu key="more" />,
             ]}
@@ -77,3 +80,5 @@ export default (props) => {
         </PageHeader>
     )
 }
+
+

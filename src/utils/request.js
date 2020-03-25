@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './authority';
 import { ROOT_URL } from '../defaultSettings';
-const ROOT = `${ROOT_URL}/api`;
+const ROOT = `${ROOT_URL}/api/v1`;
 
 
 export default function request(url, option) {

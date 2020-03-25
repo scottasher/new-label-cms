@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-function Dashboard(props) {
+function Dashboard() {
     return (
         <div>
             Dashboard

@@ -3,7 +3,7 @@ import Login from '../pages/Login';
 export default  [ 
     {
         key: 1,
-        path: '/employee/login',
+        path: '/',
         name: 'login',
         icon: 'login',
         title: 'Login',

@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 const { SubMenu } = Menu;
 
 function BaseMenu(props) {
-    // console.log('BASE MENU', props)
+    // console.log('BASE MENU', props);
+
     const renderMenuItems = (data) => {
         return data.map(i => {
             if (!i.routes) {
@@ -13,44 +14,31 @@ function BaseMenu(props) {
                     <Menu.Item key={i.path}>
                         <Link
                             to={i.path}
-                            onClick={
-                            props.isMobile ? () => {
-                                    props.onCollapse(true);
-                                }
-                                : undefined
-                            }
+                            onClick={ props.isMobile ? () => props.onCollapse(true) : undefined}
                         >
-                            {/* <Icon type={i.icon} /> */}
                             <span>{i.title}</span>
                         </Link>
                     </Menu.Item>
                 )
-            } else if (i.routes) {
-                if(i.routes === 'new-article') {
-                    return null
-                }
+            } else if (i.routes) {                
                 return (
                     <SubMenu 
-                        key={i.name}
+                        key={i.path}
                         title={
                             <span>
-                                {/* <Icon type={i.icon} /> */}
                                 <span>{i.title}</span>
                             </span>
                         }
                     >
                         {i.routes.map(r => {
+                            if(r.name === 'edit') {
+                                return null
+                            }
                             return (
                                 <Menu.Item key={r.path}>
                                     <Link
                                         to={r.path}
-                                        onClick={
-                                            props.isMobile
-                                            ? () => {
-                                                props.onCollapse(true);
-                                                }
-                                            : undefined
-                                        }
+                                        onClick={props.isMobile ? () => props.onCollapse(true) : undefined}
                                     >{r.title}</Link>
                                 </Menu.Item>
                             )
@@ -68,8 +56,9 @@ function BaseMenu(props) {
             key="Menu"
             mode='inline'
             theme='light'
+            // defaultOpenKeys={[]}
+            // selectedKeys={currentKey}
             // onOpenChange={props.handleOpenChange}
-            // selectedKeys={props.selectedKeys}
         >
             {renderMenuItems(props.menuData)}
         </Menu>

@@ -1,7 +1,7 @@
 export function getMenuMap(array) {
     array.filter(function(o) {
         if(o.routes) {
-            o.routes = o.routes.filter(s => s.menuRemove != true);
+            o.routes = o.routes.filter(s => s.menuRemove !== true);
         }
         if(o.menuRemove) {
             return false
@@ -23,7 +23,6 @@ export function parseQuery(queryString) {
 }
 
 export function takeOutMenu(data) {
-    console.log(data)
     return data.map(obj => {
         if(!obj.routes) {
             return {

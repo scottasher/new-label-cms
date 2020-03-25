@@ -5,7 +5,7 @@ import NewArticle from '../pages/Articles/New';
 export default  [ 
     {
         key: 1,
-        path: '/',
+        path: '/dashboard',
         name: 'dashboard',
         title: 'Dashboard',
         layout: 'main',
@@ -15,7 +15,7 @@ export default  [
         key: 2,
         path: '/articles',
         icon: 'appstore',
-        name: 'articles',
+        name: 'Articles',
         title: 'Articles',
         routes: [
             {
@@ -26,10 +26,9 @@ export default  [
                 layout: 'main',
             },
             {
-                path:'/articles/:id',
-                name: 'new-article',
-                title: 'New Article',
-                exact: true,
+                path:'/articles/:id/edit',
+                name: 'edit',
+                title: 'Edit',
                 component: NewArticle,    
                 layout: 'main',
             },

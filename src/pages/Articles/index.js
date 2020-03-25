@@ -1,23 +1,11 @@
 import React, { useEffect } from 'react';
-import ArticleCard from '../../components/ArticleCard';
 import { Card, Row, Col, Table, Divider, Tag, Popconfirm } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchArticles, deleteArticle } from '../../actions/articles';
-
-function renderArticles(posts) {
-    return posts.map(post => {
-        return (
-            <Col xs={24} sm={12}>  
-                <Link to={`/articles/${post.id}`}>       
-                    <ArticleCard article={post} />
-                </Link>
-            </Col>
-        )
-    })
-}
+import { fetchArticles, deleteArticle, clearArticle } from '../../actions/articles';
 
 function Articles(props) {
+    console.log(props)
     useEffect(() => {
         props.fetchArticles();
     }, []);
@@ -26,7 +14,7 @@ function Articles(props) {
             title: 'Title',
             dataIndex: 'title',
             key: 'title',
-            render: (text, record) => <Link to={`/articles/${record.id}`}>{text}</Link>,
+            render: (text, record) => <Link to={`/articles/${record.id}/edit`}>{text}</Link>,
         },
         {
             title: 'Category',
@@ -59,7 +47,7 @@ function Articles(props) {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Link to={`/articles/${record.id}`}>Edit</Link>
+                    <Link to={`/articles/${record.id}/edit`}>Edit</Link>
                     <Divider type="vertical" />
                     <Popconfirm
                         title="Are you sure delete this article"
@@ -81,7 +69,14 @@ function Articles(props) {
     return (
         <Row>
           <Col>
-            <Card title={<h3>All Articles</h3>} extra={<Link to='/articles/create'>+ Add New</Link>} style={{ marginTop: '20px' }}>   
+            <Card 
+                title={<h3>All Articles</h3>} 
+                extra={(
+                    <Link to='/articles/create'>
+                        <div onClick={() => props.clearArticle()}>+ Add New</div>
+                    </Link>
+                )} 
+                style={{ marginTop: '20px' }}>   
               <Table rowKey={record => record.id} columns={columns} dataSource={props.articles} />
             </Card>
           </Col>
@@ -93,4 +88,4 @@ function mapStateToProps({ articles }) {
     return { articles };
   }
   
-export default connect(mapStateToProps, { fetchArticles, deleteArticle })(Articles);
+export default connect(mapStateToProps, { fetchArticles, deleteArticle, clearArticle })(Articles);

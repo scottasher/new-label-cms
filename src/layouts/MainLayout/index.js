@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, PageHeader } from 'antd';
+import { Layout } from 'antd';
 import Breadcrumbs from '../../components/Breadcrumbs';
 import MainHeader from '../../components/MainHeader';
 import SideMenu from '../../components/SideMenu';

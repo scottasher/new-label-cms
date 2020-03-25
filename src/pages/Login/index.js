@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { notification } from 'antd';
 import { connect } from 'react-redux';
 import LoginForm from '../../components/LoginForm';
 import {parseQuery} from '../../utils';
+import { userLogin } from '../../actions/users';
 
 function Login(props) {
     function userActivation() {
@@ -28,16 +29,26 @@ function Login(props) {
         }
     }
 
+    function handleLogin(e) {
+        if(!e.veryify) {
+            return props.userLogin({ user: e }, props.history)
+        }
+    }
+
+    function handleFailedLogin(e) {
+        console.log(e)
+    }
+
     return (
         <div className='login-main'>
             {userActivation()}
-            <LoginForm />
+            <LoginForm loading={props.loading} handleFailedLogin={handleFailedLogin} handleLogin={handleLogin} />
         </div>
     )
 }
 
-function mapStateToProps({ login }) {
-    return { login };
-  }
+function mapStateToProps({ login, loading }) {
+    return { login, loading };
+}
   
-  export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps, { userLogin })(Login);
