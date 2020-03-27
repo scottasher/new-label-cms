@@ -47,11 +47,11 @@ function NewArticle(props) {
             imageName: values.imageName[0].name,
             status: selectedMenuItem
         };
-
+        console.log(props.match.params.id)
         if(!props.match.params.id) {
-            return props.createArticle(newArticle, props.history)
-        } 
-        return props.updateArticle(newArticle, props.match.params.id)
+            return props.createArticle(newArticle, null, props.history)
+        }
+        return props.updateArticle(newArticle, props.match.params.id, null)
 
     };
 

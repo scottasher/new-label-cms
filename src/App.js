@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.less';
 import { connect } from 'react-redux';
 import { fetchUser } from './actions/users';
@@ -9,6 +9,11 @@ import LoginIndex from './layouts/LoginIndex';
 import MainIndex from './layouts/MainIndex';
 
 function App(props) {
+    useEffect(() => {
+        if(!props.user.id) {
+            props.fetchUser()
+        }
+    })
     const loginRoutes = authRoutes.map((route, key) => {
         if(!route.routes) {
             return <LoginIndex {...route} user={props.user} exact path={route.path} component={route.component} key={key} />

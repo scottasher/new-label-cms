@@ -1,5 +1,5 @@
 import React from 'react';
-// import RightContent from './RightContent';
+import RightContent from './RightContent';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import './index.less';
 
@@ -14,7 +14,7 @@ export default function GlobalHeader (props) {
             <span className='trigger' onClick={toggle}>
                 {props.collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </span>
-            {/* <RightContent {...props} /> */}
+            <RightContent {...props} />
         </div>
     );
 }

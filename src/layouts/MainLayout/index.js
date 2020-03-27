@@ -5,6 +5,7 @@ import MainHeader from '../../components/MainHeader';
 import SideMenu from '../../components/SideMenu';
 import { connect } from 'react-redux';
 import { sideCollapse } from '../../actions/utils';
+import { fetchUser } from '../../actions/users';
 import { ContainerQuery } from 'react-container-query';
 import classnames from 'classnames';
 import { format } from 'date-fns';
@@ -84,8 +85,8 @@ function MainLayout(props) {
     )
 }
 
-function mapStateToProps({ collapsed }) {
-    return { collapsed }
+function mapStateToProps({ collapsed, user }) {
+    return { collapsed, user }
 }
 
-export default connect(mapStateToProps, { sideCollapse })(MainLayout)
+export default connect(mapStateToProps, { sideCollapse, fetchUser })(MainLayout)

@@ -51,14 +51,13 @@ export const createArticle = (values, history) => async dispatch => {
 export const updateArticle = (values, id, history) => async dispatch => {
     dispatch({ type: FETCH_LOADING, payload: true})
 
-    console.log(values)
     const res = await request(`/articles/${id}`, {
         method: 'put',
         data: values
     });
   
     createAlert(res.data)
-    dispatch({ type: FETCH_ARTICLE, payload: res.data.article });
+    dispatch({ type: FETCH_ARTICLE, payload: res.data });
     dispatch({ type: FETCH_LOADING, payload: false})
 };
 

@@ -23,7 +23,8 @@ function Articles(props) {
         },
         {
             title: 'Author',
-            dataIndex: 'author.username',
+            dataIndex: 'author',
+            render: (text, record) => <Link to={`/articles`}>{text.name}</Link>,
             key: 'id',
         },
         {
@@ -70,6 +71,7 @@ function Articles(props) {
         <Row>
           <Col>
             <Card 
+                loading={props.loading}
                 title={<h3>All Articles</h3>} 
                 extra={(
                     <Link to='/articles/create'>
@@ -84,8 +86,8 @@ function Articles(props) {
     )
 }
 
-function mapStateToProps({ articles }) {
-    return { articles };
+function mapStateToProps({ articles, loading }) {
+    return { articles, loading };
   }
   
 export default connect(mapStateToProps, { fetchArticles, deleteArticle, clearArticle })(Articles);

@@ -8,16 +8,16 @@ export const fetchUser = () => async dispatch => {
     const res = await request('/users/current', {
         method: 'get',
     });
-  
+    console.log(res);
     // // setLocale('enUs');
-    if(!res.data) {
+    if(!res) {
         user = { user: { active: false } }
     } else {
         user = res.data
     }
     // console.log('FETCHUSER ACTION', user)
   
-    dispatch({ type: FETCH_USER, payload: user });
+    // dispatch({ type: FETCH_USER, payload: user });
 };
 
 export const userLogin = (values, history, redirect) => async dispatch => {
