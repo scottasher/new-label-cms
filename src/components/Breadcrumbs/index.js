@@ -2,21 +2,22 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 import routes from '../../config/main.routes';
+import path from 'path';
 
 const breadcrumbNameMap = routes.filter(r => {
-    if(r.path === '/') {
+    if(r.path === '/' | 'Admin') {
         return false
     }
     return true
 }).map(r => { 
     const arr = {};
     if(r.routes) {
-        return r.routes.map(obj => {
-            return arr[obj.path] = obj.title
+        r.routes.map(obj => {
+            arr[obj.path] = obj.title 
         })
     }
     arr[r.path] = r.title
-    return arr;
+    return arr
 }).reduce(function(result, currentObject) {
     for(var key in currentObject) {
         if (currentObject.hasOwnProperty(key)) {
@@ -24,18 +25,18 @@ const breadcrumbNameMap = routes.filter(r => {
         }
     }
     return result;
-}, {});;
+}, {});
 
 const Breadcrumbs = withRouter(props => {
     const { location } = props;
     const pathSnippets = location.pathname.split('/').filter(i => i);
     const extraBreadcrumbItems = pathSnippets.filter(i => i !== 'dashboard').map((_, index) => {
-        
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
-        if(url + '/:id/edit' || url + '/create') {
+        // console.log(breadcrumbNameMap);
+        if(!isNaN(path.basename(url))) {
             return (
-                <Breadcrumb.Item key={url + `${_}/edit`}>
-                    <p style={{ display: 'contents', textTransform: 'capitalize' }}>{_}</p>
+                <Breadcrumb.Item key={url}>
+                    <Link to={url} style={{ display: 'contents', textTransform: 'capitalize' }}>{_}</Link>
                 </Breadcrumb.Item>
             );
         }

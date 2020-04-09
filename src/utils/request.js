@@ -21,7 +21,7 @@ export default function request(url, option) {
     ...headers,
   };
 
-  // console.log('REQUEST',newOptions)
+  console.log('REQUEST',newOptions)
 
   return axios(url, newOptions)
     .then(res => {

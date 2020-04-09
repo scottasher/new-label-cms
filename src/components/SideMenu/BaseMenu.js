@@ -9,12 +9,15 @@ function BaseMenu(props) {
 
     const renderMenuItems = (data) => {
         return data.map(i => {
+            if(i.name === 'Admin') {
+                return false
+            }
             if (!i.routes) {
                 return (
                     <Menu.Item key={i.path}>
                         <Link
                             to={i.path}
-                            onClick={ props.isMobile ? () => props.onCollapse(true) : undefined}
+                            onClick={() => props.onCollapse(false)}
                         >
                             <span>{i.title}</span>
                         </Link>
@@ -38,7 +41,7 @@ function BaseMenu(props) {
                                 <Menu.Item key={r.path}>
                                     <Link
                                         to={r.path}
-                                        onClick={props.isMobile ? () => props.onCollapse(true) : undefined}
+                                        onClick={() => props.onCollapse(false)}
                                     >{r.title}</Link>
                                 </Menu.Item>
                             )

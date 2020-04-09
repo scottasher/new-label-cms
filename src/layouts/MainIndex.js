@@ -3,23 +3,24 @@ import MainLayout from './MainLayout';
 import Media from 'react-media';
 import { Route, Redirect } from 'react-router-dom';
 
-export default function MainIndex({ component: Component, location, ...rest }) {
-    // console.log(location)
-    if(location) {
-        return <Redirect to={location.state.from} />
-    }
-
+export default function MainIndex({ component: Component, currentUser, location, ...rest }) {
     return (
-        <Route {...rest} render={(props) => {
-            return (
+        <Route {...rest} render={matchProps => (
+            currentUser.active
+            ? (
                 <Media query="(max-width: 599px)">
                     {isMobile => (
-                        <MainLayout isMobile={isMobile} {...props}>
-                            <Component {...props}/>
+                        <MainLayout isMobile={isMobile} {...rest} {...matchProps}>
+                            <Component {...rest} {...matchProps}/>
                         </MainLayout>
                     )}
                 </Media>
+            ) : (
+                <Redirect to={{
+                    pathname: "/",
+                    state: { from: matchProps.location }
+                }}/>
             )
-        }} />
-    )
+        )}/>
+    );
 }

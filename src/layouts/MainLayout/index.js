@@ -3,9 +3,9 @@ import { Layout } from 'antd';
 import Breadcrumbs from '../../components/Breadcrumbs';
 import MainHeader from '../../components/MainHeader';
 import SideMenu from '../../components/SideMenu';
+import AdminMenu from '../../components/AdminMenu';
 import { connect } from 'react-redux';
-import { sideCollapse } from '../../actions/utils';
-import { fetchUser } from '../../actions/users';
+import { sideCollapse, adminCollapse } from '../../actions/utils';
 import { ContainerQuery } from 'react-container-query';
 import classnames from 'classnames';
 import { format } from 'date-fns';
@@ -45,11 +45,12 @@ const query = {
 };
 
 function MainLayout(props) {
+    // console.log('[MAINLAYOUT PROPS]', props);
     const handleMenuCollapse = (e) => {
         // console.log(e);
         props.sideCollapse(e);
     };
-    
+    // console.log(props)
     const layout = (
         <Layout className="layout">
             <div className='sider-view'>
@@ -65,6 +66,7 @@ function MainLayout(props) {
                     handleMenuCollapse={handleMenuCollapse}
                     {...props}
                 />
+                <AdminMenu {...props} visible={props.adminCollapsed} handleCollapse={props.adminCollapse} />
                 <Content>
                     <Breadcrumbs />
                     <div className="site-layout-content">{props.children}</div>
@@ -85,8 +87,8 @@ function MainLayout(props) {
     )
 }
 
-function mapStateToProps({ collapsed, user }) {
-    return { collapsed, user }
+function mapStateToProps({ collapsed, currentUser, adminCollapsed }) {
+    return { collapsed, currentUser, adminCollapsed }
 }
 
-export default connect(mapStateToProps, { sideCollapse, fetchUser })(MainLayout)
+export default connect(mapStateToProps, { sideCollapse, adminCollapse })(MainLayout)

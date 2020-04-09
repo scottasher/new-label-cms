@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Form, Row, Card, Tooltip, Tag, Spin, Col, Input } from 'antd';
 import Head from './Head';
 import FormRight from './FormRight';
-import { createArticle, fetchArticle, updateArticle } from '../../../actions/articles';
+import { createArticle, fetchArticle, updateArticle, clearArticle } from '../../../actions/articles';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './index.less';
@@ -23,6 +23,9 @@ function NewArticle(props) {
 
     useEffect(() => {
         id = props.match.params.id
+        if(!id) {
+            props.clearArticle()
+        }
         if(id) {
             props.fetchArticle(id)
         }
@@ -47,16 +50,17 @@ function NewArticle(props) {
             imageName: values.imageName[0].name,
             status: selectedMenuItem
         };
-        console.log(props.match.params.id)
+        // console.log(props.match.params.id)
         if(!props.match.params.id) {
-            return props.createArticle(newArticle, null, props.history)
+            // console.log('[CREATE ARTICLE]', props.match.params.id)
+            return props.createArticle(newArticle, props.history)
         }
         return props.updateArticle(newArticle, props.match.params.id, null)
 
     };
 
     const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
+        // console.log('Failed:', errorInfo);
     };
 
     const initVals = (data) => {
@@ -174,4 +178,4 @@ function mapStateToProps({ loading, article }) {
     return { loading, article }
 }
 
-export default connect(mapStateToProps, { createArticle, updateArticle, fetchArticle })(NewArticle);
+export default connect(mapStateToProps, { createArticle, updateArticle, fetchArticle, clearArticle })(NewArticle);

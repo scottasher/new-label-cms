@@ -23,7 +23,7 @@ function Login(props) {
                 notification['success']({
                 message: 'Successfully activated account',
                 description:
-                    'You have successfully signed up for extraleap, please login to start taking online courses.',
+                    'You have successfully signed up, please login to start taking online courses.',
                 })
             )
         }
@@ -36,7 +36,7 @@ function Login(props) {
     }
 
     function handleFailedLogin(e) {
-        console.log(e)
+        // console.log(e)
     }
 
     return (

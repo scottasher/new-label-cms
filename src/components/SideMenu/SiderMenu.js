@@ -8,21 +8,16 @@ const { Sider } = Layout;
 export default function SiderMenu(props) {
     // const defaultProps = props.collapsed ? {} : { openKeys };
     // console.log('SiderMenu', props)
-    let firstMount = false;
 
     return (
         <Sider
             trigger={null}
             collapsible
-            collapsed={props.collapsed}
+            collapsed={!props.collapsed}
             breakpoint="lg"
-            onCollapse={collapse => {
-                if (firstMount || !props.isMobile) {
-                    props.onCollapse(collapse);
-                }
-            }}
+            onCollapse={collapse => props.onCollapse(collapse)}
             width={256}
-            theme={props.theme}
+            theme="light"
             style={{ padding: '0px' }}
         >
             <div className='logo' id="logo">

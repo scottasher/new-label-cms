@@ -6,7 +6,7 @@ import './index.less';
 
 export default function LoginForm(props) {
     return (
-        <Form className="login-form" onFinish={props.handleLogin} onFinishFailed={props.handleFailedLogin}>
+        <Form name="login-form" className="login-form" onFinish={props.handleLogin} onFinishFailed={props.handleFailedLogin}>
             <Form.Item name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
                 <Input
                     prefix={<MailOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -25,7 +25,7 @@ export default function LoginForm(props) {
                     placeholder="Verify"
                 />
             </Form.Item>
-            <Form.Item name="remember">
+            <Form.Item >
                 <Checkbox className='remember'>Remember me</Checkbox>
                 <Link className="login-form-forgot" to="/employee/forgot/password">
                     Forgot password
@@ -35,7 +35,6 @@ export default function LoginForm(props) {
                 </Button>
                 <div>
                     <span><Link to="/">Back Home</Link></span>
-                    <span style={{ float: 'right' }}>Or <Link to="/user/register">Register Now!</Link></span>
                 </div>
             </Form.Item>
         </Form>

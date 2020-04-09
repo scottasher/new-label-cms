@@ -6,10 +6,10 @@ import {
     FETCH_LOADING
 } from '../types';
 
-export const fetchArticles = () => async dispatch => {
+export const fetchArticles = (author, count, status) => async dispatch => {
     dispatch({ type: FETCH_LOADING, payload: true})
 
-    const res = await request('/articles', {
+    const res = await request(`/articles?${!author ? '' : "author=" + JSON.stringify(author)}${!count ? '' : "&count=" + count}${!status ? '' : "&status=" + status}`, {
         method: 'get',
     });
 

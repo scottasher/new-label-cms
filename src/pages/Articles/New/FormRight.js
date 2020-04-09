@@ -28,11 +28,11 @@ export default (props) => {
     );
     const handleClose = removedTag => {
         const tags = this.state.tags.filter(tag => tag !== removedTag);
-        console.log(tags);
+        // console.log(tags);
         this.setState({ tags });
     };
     const saveInputRef = input => {
-        console.log(input)
+        // console.log(input)
         tagInput = input
     };
 

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { fetchArticles, deleteArticle, clearArticle } from '../../actions/articles';
 
 function Articles(props) {
-    console.log(props)
+    // console.log(props)
     useEffect(() => {
         props.fetchArticles();
     }, []);
@@ -20,6 +20,7 @@ function Articles(props) {
             title: 'Category',
             dataIndex: 'category',
             key: 'category',
+            render: (text) => <div style={{ textTransform: 'capitalize' }}>{text}</div>
         },
         {
             title: 'Author',

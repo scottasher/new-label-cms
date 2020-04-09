@@ -3,23 +3,17 @@ import LoginLayout from './LoginLayout';
 import Media from 'react-media';
 import { Route, Redirect } from 'react-router-dom';
 
-export default function LoginIndex({ component: Component, user, location, ...rest }) {
-    // console.log(location)
-    if(user.active && location) {
-        return <Redirect to={location.state.from} />
-    }
-
+export default function LoginIndex({ component: Component, currentUser, location, loading, ...rest }) {
+    // console.log(currentUser)
     return (
-        <Route {...rest} render={(props) => {
-            return (
-                <Media query="(max-width: 599px)">
-                    {isMobile => (
-                        <LoginLayout isMobile={isMobile} {...props}>
-                            <Component {...props}/>
-                        </LoginLayout>
-                    )}
-                </Media>
+        <Route {...rest} render={(moreProps) => 
+            !currentUser.active ? (
+                <LoginLayout>
+                    <Component {...moreProps} />
+                </LoginLayout>
+            ) : (
+                <Redirect to={moreProps.location.state.from} />
             )
-        }} />
-    )
+        } />
+    );
 }

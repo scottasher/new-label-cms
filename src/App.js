@@ -1,47 +1,46 @@
 import React, { useEffect } from 'react';
-import './App.less';
 import { connect } from 'react-redux';
-import { fetchUser } from './actions/users';
+import { Spin } from 'antd';
+import { fetchCurrentUser } from './actions/users';
 import mainRoutes from './config/main.routes';
 import authRoutes from './config/auth.routes';
-
+import { Switch } from 'react-router-dom';
 import LoginIndex from './layouts/LoginIndex';
 import MainIndex from './layouts/MainIndex';
+import './App.less';
 
 function App(props) {
     useEffect(() => {
-        if(!props.user.id) {
-            props.fetchUser()
-        }
-    })
+        props.fetchCurrentUser()
+    }, [props.currentUser.active]);
+
     const loginRoutes = authRoutes.map((route, key) => {
         if(!route.routes) {
-            return <LoginIndex {...route} user={props.user} exact path={route.path} component={route.component} key={key} />
+            return <LoginIndex exact {...route} currentUser={props.currentUser} path={route.path} component={route.component} key={key} />
         }
         return authRoutes.routes.map(r => {
-            return <LoginIndex {...route} user={props.user} exact path={r.path} component={r.component} key={r.path} />
+            return <LoginIndex exact {...route} currentUser={props.currentUser} path={r.path} component={r.component} key={r.path} />
         });
     });
 
     const dashboardRoutes = mainRoutes.map((route, key) => {
         if(!route.routes) {
-            return <MainIndex {...route} user={props.user} exact path={route.path} component={route.component} key={key} />
+            return <MainIndex {...route} currentUser={props.currentUser} exact path={route.path} component={route.component} key={key} />
         } 
         return route.routes.map(r => {
-            return <MainIndex {...route} user={props.user} exact path={r.path} component={r.component} key={r.path} />
+            return <MainIndex {...route} currentUser={props.currentUser} children={r.children} exact path={r.path} component={r.component} key={r.path} />
         });
     });
-
     return (
-        <>  
+        <Switch>  
             {loginRoutes}
             {dashboardRoutes}
-        </>
+        </Switch>
     );
 }
 
-function mapStateToProps({ user }) {
-    return { user };    
+function mapStateToProps({ currentUser, loading }) {
+    return { currentUser, loading };    
 }
 
-export default connect(mapStateToProps, { fetchUser })(App);
+export default connect(mapStateToProps, { fetchCurrentUser })(App);

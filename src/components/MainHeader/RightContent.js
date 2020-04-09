@@ -1,9 +1,12 @@
 import React from 'react';
 import { Menu, Spin, Avatar, Dropdown } from 'antd';
-import { UserOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, SettingOutlined, LogoutOutlined, GlobalOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-export default (props) => {
-    console.log(props)
+import { connect } from 'react-redux';
+import { userLogout } from '../../actions/users';
+import { adminCollapse } from '../../actions/utils';
+
+const RightContent = (props) => {
     const menu = (
         <Menu className='menu' selectedKeys={[]}>
             <Menu.Item key="/account/center">       
@@ -18,25 +21,33 @@ export default (props) => {
                     <div className="user-drop-menu-text">Account Settings</div>
                 </Link>
             </Menu.Item>
+            {!props.currentUser.authority === "superAdmin" && "admin" ? null : (
+                <Menu.Item onClick={() => props.adminCollapse(!props.adminCollapsed)} key="/admin/settings">
+                    <div>
+                        <GlobalOutlined />
+                        <div className="user-drop-menu-text">Admin Settings</div>
+                    </div>
+                </Menu.Item>
+            )}
             <Menu.Divider />
-            <Menu.Item key="logout">
-                <Link to="/">
+            <Menu.Item onClick={() => props.userLogout(props.history)} key="logout">
+                <div>
                     <LogoutOutlined />
                     <div className="user-drop-menu-text">Logout</div>
-                </Link>
+                </div>
             </Menu.Item>
         </Menu>
     );
-    
+
     function renderUserIcon() {
-        return props.user.email ? (
+        return !props.currentUser.id ? (
             <Spin size="small" style={{ marginLeft: 8, marginRight: 8, paddingBottom: 0 }} />
         ) : null
     }
-
+    // console.log(props)
     return (
         <div className='right'>
-            {props.user.email ? (
+            {props.currentUser.id ? (
                 <Dropdown overlay={menu}>
                     <span className='action account'>
                         <Avatar
@@ -44,7 +55,7 @@ export default (props) => {
                             src='https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'
                             alt="avatar"
                         />
-                        <span className='dropdown-user'>{props.user.name}</span>
+                        <span className='dropdown-user'>{props.currentUser.name}</span>
                     </span>
                 </Dropdown>
                 ) : (
@@ -53,3 +64,5 @@ export default (props) => {
         </div>
     )
 }
+
+export default connect(null, { userLogout, adminCollapse })(RightContent);

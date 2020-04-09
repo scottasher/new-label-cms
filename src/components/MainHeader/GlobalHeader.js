@@ -4,7 +4,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import './index.less';
 
 export default function GlobalHeader (props) {
-    // console.log(props);
+    // console.log('Global Header', props);
     const toggle = () => {
         props.onCollapse(!props.collapsed);
     };

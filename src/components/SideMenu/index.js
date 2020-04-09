@@ -6,16 +6,16 @@ import './index.less';
 const SiderMenuWrapper = (props) => {
     return (
         <Drawer
-            visible={!props.collapsed}
+            visible={props.collapsed}
             placement="left"
-            onClose={() => props.onCollapse(true)}
+            onClose={() => props.onCollapse(false)}
             style={{
                 padding: 0,
                 height: '100vh',
             }}
             className='drawer-view'
         >
-            <SiderMenu {...props} collapsed={props.isMobile ? false : props.collapsed} />
+            <SiderMenu {...props} collapsed={props.collapsed} />
         </Drawer>
     )
 };
