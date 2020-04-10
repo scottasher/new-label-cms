@@ -1,6 +1,6 @@
 import { FETCH_CURRENT_USER } from '../../actions/types';
 
-export const currentUser =  function(state = {}, action) {
+export const currentUser =  function(state = { active: false }, action) {
   switch (action.type) {
     case FETCH_CURRENT_USER:
       // console.log('[FETCH_CURRENT_USER REDUCER]', action.payload.user);

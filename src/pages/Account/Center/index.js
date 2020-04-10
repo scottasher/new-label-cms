@@ -3,7 +3,7 @@ import { Card, Row, Col } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchCurrentUser } from '../../../actions/users';
-import { fetchArticles, updateArticle } from '../../../actions/articles';
+import { fetchArticles, updateArticle, clearArticles } from '../../../actions/articles';
 import './index.less';
 import ArticlesList from './ArticlesList';
 
@@ -16,10 +16,13 @@ class Center extends Component {
   };
 
   componentDidMount() {
+    this.props.clearArticles();
     this.props.fetchCurrentUser();
-    this.props.fetchArticles({
-      id: this.props.currentUser.id,
-      name: this.props.currentUser.displayName
+    setTimeout(() => {
+      this.props.fetchArticles({
+        id: this.props.currentUser.id,
+        name: this.props.currentUser.displayName
+      }, 100)
     })
   }
 
@@ -139,4 +142,4 @@ function mapStateToProps({ currentUser, articles }) {
   return { currentUser, articles };
 }
 
-export default withRouter(connect(mapStateToProps, { fetchCurrentUser, fetchArticles, updateArticle })(Center));
+export default withRouter(connect(mapStateToProps, { fetchCurrentUser, fetchArticles, updateArticle, clearArticles })(Center));

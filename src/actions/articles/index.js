@@ -34,6 +34,12 @@ export const clearArticle = (history) => async dispatch => {
     dispatch({ type: FETCH_LOADING, payload: false})
 }
 
+export const clearArticles = (history) => async dispatch => {
+    dispatch({ type: FETCH_LOADING, payload: true})
+    dispatch({ type: FETCH_ARTICLES, payload: [] })
+    dispatch({ type: FETCH_LOADING, payload: false})
+}
+
 export const createArticle = (values, history) => async dispatch => {
     dispatch({ type: FETCH_LOADING, payload: true})
 

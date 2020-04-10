@@ -12,7 +12,9 @@ export default function LoginIndex({ component: Component, currentUser, location
                     <Component {...moreProps} />
                 </LoginLayout>
             ) : (
-                <Redirect to={moreProps.location.state.from} />
+                !moreProps.location.state ? <Redirect to="/dashboard" /> : (
+                    <Redirect to={moreProps.location.state.from} />
+                )
             )
         } />
     );

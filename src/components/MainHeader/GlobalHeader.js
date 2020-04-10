@@ -12,7 +12,7 @@ export default function GlobalHeader (props) {
     return (
         <div className='header'>
             <span className='trigger' onClick={toggle}>
-                {props.collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                {!props.collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </span>
             <RightContent {...props} />
         </div>
