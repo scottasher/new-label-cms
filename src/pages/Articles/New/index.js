@@ -18,8 +18,10 @@ function NewArticle(props) {
     const [optionsVisible, setOptionsVisible] = useState(false);
     const [selectedMenuItem, setSelectedMenuItem] = useState('public');
     const [dropVisible, setDropVisible] = useState(false);
-    const [inputVisible, setInputVisible] = useState(false)
-    const [inputValue, setInputValue] = useState('')
+    const [inputVisible, setInputVisible] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const [fileList, setFileList] = useState([]);
+
 
     useEffect(() => {
         id = props.match.params.id
@@ -69,16 +71,15 @@ function NewArticle(props) {
             return 
         }
         setTags(data.tags);
-
-        let imgPath;
+        
         if(data.image && props.match.params) {
-            imgPath = [{
+            setFileList([{
                 uid: '-1',
                 name: data.image.name,
                 status: 'done',
                 url: data.image.path,
                 thumbUrl: data.image.path,
-            }]
+            }]);
         }
         const init = {
             title: data.title,
@@ -86,7 +87,6 @@ function NewArticle(props) {
             textSnippet: data.textSnippet,
             category: data.category,
             tags: data.tags,
-            imageName: imgPath || []
         }
         return form.setFieldsValue(init)
     }
@@ -165,6 +165,8 @@ function NewArticle(props) {
                         inputVisible={inputVisible}
                         inputValue={inputValue}
                         handleClose={handleClose}
+                        fileList={fileList}
+                        setFileList={setFileList}
                     />
                 </Row>
             </Card>

@@ -8,7 +8,6 @@ const { Option } = Select;
 
 export default (props) => {
     let tagInput;
-    const [fileList, setFileList] = useState([]);
     const IMG_UPLOAD_URL = `${ROOT_URL}/api/v1/articles/image?token=Token ${getToken()}`;
 
     useEffect(() => {
@@ -102,8 +101,8 @@ export default (props) => {
                     name="articleImage" 
                     action={IMG_UPLOAD_URL} 
                     listType="picture"
-                    onChange={({fileList}) => setFileList([...fileList])}
-                    fileList={fileList}
+                    onChange={({fileList}) => props.setFileList([...fileList])}
+                    fileList={props.fileList}
                 >
                     <Button>
                         <UploadOutlined /> Click to upload
