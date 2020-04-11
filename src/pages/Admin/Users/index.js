@@ -98,14 +98,14 @@ const AdminUsers = (props) => {
             title: 'Active',
             dataIndex: 'active',
             key: 'active'+1,
-            render: (active, obj) => <Badge key={obj.id + 3} status={active ? "success" : "error"} />
+            render: (active, obj) => <Badge key={obj.id + 3} status={active ? "success" : "processing"} />
         },
         {
             title: 'Action',
             key: 'id',
             render: (text, record) => (
                 <span key={record.id}>
-                    <Link to={`/admin/users/${record.id}/edit`}>edit</Link> | 
+                    <Link to={`/admin/users/${record.id}/edit`}>Edit</Link> | 
                     <Popconfirm
                         title="Are you sure delete this task?"
                         onConfirm={() => props.deleteUser(record.id)}
@@ -115,7 +115,7 @@ const AdminUsers = (props) => {
                         <span 
                             style={{ marginLeft: 3, color: '#258eac', cursor: 'pointer' }}
                         > 
-                             delete
+                             Delete
                         </span>
                     </Popconfirm>
                 </span>

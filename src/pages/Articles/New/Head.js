@@ -25,7 +25,9 @@ export default (props) => {
     );
 
     const renderOptions = () => {
-        return <div>NEED TO ADD STUFF HERE STILL</div>
+        return (
+            <div>need to add stuff here</div>
+        )
     }
 
     const DropdownMenu = () => {

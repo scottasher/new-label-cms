@@ -150,3 +150,14 @@ export const clearUser = () => async dispatch => {
     dispatch({ type: FETCH_LOADING, payload: false})
 }
 
+export const resendVerifyEmail = (id) => async dispatch => {
+    dispatch({ type: FETCH_LOADING, payload: true });
+    const res = await request(`/users/resend/verify/${id}`, {
+        method: 'get',
+    });
+
+    createUser(res.data)
+    dispatch({ type: FETCH_USER, payload: res.data });
+    dispatch({ type: FETCH_LOADING, payload: false });
+}
+

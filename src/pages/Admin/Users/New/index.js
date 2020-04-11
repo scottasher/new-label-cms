@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
-import { Card, Form, Input, Select, Button } from 'antd';
-import { updateUser, createUser, fetchUser, clearUser } from '../../../../actions/users';
+import { Card, Form, Input, Select, Button, Popconfirm } from 'antd';
+import { updateUser, createUser, fetchUser, clearUser, resendVerifyEmail } from '../../../../actions/users';
 import { connect } from 'react-redux';
 
 const { Option } = Select;
@@ -9,7 +9,12 @@ const auths = [
     'admin',
     'editor',
     'author',
-]
+];
+const verifyStyle = { 
+    marginRight: 20,
+    color: '#258eac', 
+    cursor: 'pointer'
+}
 
 function NewUser(props) {
     const [form] = Form.useForm();
@@ -43,14 +48,22 @@ function NewUser(props) {
             <Card 
                 loading={props.loading} 
                 title={name} 
-                extra={
+                extra={[
+                    <Popconfirm
+                        title="Are you sure?"
+                        onConfirm={() => props.resendVerifyEmail(props.match.params.id)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <span style={verifyStyle}>Resend Verification Email</span>
+                    </Popconfirm>,
                     <Button 
                         htmlType="submit" 
                         type="primary"
                     >
                         {props.loading ? (props.match.params.id ? "Updating..." : "Uploading...") : (props.match.params.id ? "Update User" : "Create User")}
                     </Button>
-                }
+                ]}
             >  
                 <Form.Item
                     label="Name"
@@ -93,4 +106,4 @@ function mapStateToProps({ user, loading }) {
     return { user, loading }
 }
 
-export default connect(mapStateToProps, { updateUser, createUser, fetchUser, clearUser })(NewUser);
+export default connect(mapStateToProps, { updateUser, createUser, fetchUser, clearUser, resendVerifyEmail })(NewUser);

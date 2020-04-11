@@ -21,9 +21,7 @@ export default function LoginForm(props) {
                 />
             </Form.Item>
             <Form.Item style={{ display: 'none' }} name="verify">
-                <Input
-                    placeholder="Verify"
-                />
+                <Input/>
             </Form.Item>
             <Form.Item >
                 <Checkbox className='remember'>Remember me</Checkbox>

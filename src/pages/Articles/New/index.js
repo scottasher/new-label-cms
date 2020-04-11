@@ -117,16 +117,14 @@ function NewArticle(props) {
             onFinishFailed={onFinishFailed}
         >
             <Head 
-                loading={props.loading}
-                history={props.history}
-                article={props.article} 
+                {...props}
                 handlePublishChange={handlePublishChange} 
                 handleDropMenu={handleDropMenu}
                 dropVisible={dropVisible}
                 optionsVisible={optionsVisible}
-                loading={props.loading}
                 selectedMenuItem={selectedMenuItem}
                 setOptionsVisible={setOptionsVisible}
+
             />
             <Card loading={props.loading} style={{width: '100%'}} bordered={false}>
                 <Row gutter={[16, 16]}>
@@ -178,4 +176,6 @@ function mapStateToProps({ loading, article }) {
     return { loading, article }
 }
 
-export default connect(mapStateToProps, { createArticle, updateArticle, fetchArticle, clearArticle })(NewArticle);
+export default connect(mapStateToProps, { 
+    createArticle, updateArticle, fetchArticle, clearArticle,  
+})(NewArticle);
