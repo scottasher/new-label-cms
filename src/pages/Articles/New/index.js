@@ -72,14 +72,15 @@ function NewArticle(props) {
         }
         setTags(data.tags);
         
+        let imgPath;
         if(data.image && props.match.params) {
-            setFileList([{
+            imgPath = [{
                 uid: '-1',
                 name: data.image.name,
                 status: 'done',
                 url: data.image.path,
                 thumbUrl: data.image.path,
-            }]);
+            }]
         }
         const init = {
             title: data.title,
@@ -87,6 +88,7 @@ function NewArticle(props) {
             textSnippet: data.textSnippet,
             category: data.category,
             tags: data.tags,
+            imageName: imgPath || []
         }
         return form.setFieldsValue(init)
     }
