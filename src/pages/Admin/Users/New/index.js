@@ -18,28 +18,20 @@ function NewUser(props) {
     useEffect(() => {
         id = props.match.params.id
         if(!id) {
-            props.clearUser()
+            props.clearUser();
         }
         if(id) {
             props.fetchUser(id)
-            setInitValues(props.user)
+            form.setFieldsValue(props.user)
             setName(props.user.displayName)
         }
     }, [props.user.id]);
 
     function handleForm(values) {
-        if(props.match.params.id) {
-            return props.updateUser(values)
+        if(!props.match.params.id) {
+            return props.createUser(values, props.history);
         }
-        return props.createUser(values, props.history)
-    }
-
-    function setInitValues(e) {
-        form.setFieldsValue(e)
-    }
-
-    function handleName(e) {
-        setName(e.target.value)
+        return props.updateUser(values);
     }
 
     return (
@@ -51,7 +43,14 @@ function NewUser(props) {
             <Card 
                 loading={props.loading} 
                 title={name} 
-                extra={<Button htmlType="submit" type="primary">{props.loading ? "Uploading..." : "Create User"}</Button>}
+                extra={
+                    <Button 
+                        htmlType="submit" 
+                        type="primary"
+                    >
+                        {props.loading ? (props.match.params.id ? "Updating..." : "Uploading...") : (props.match.params.id ? "Update User" : "Create User")}
+                    </Button>
+                }
             >  
                 <Form.Item
                     label="Name"
@@ -65,7 +64,7 @@ function NewUser(props) {
                     name="displayName"
                     rules={[{ required: true, message: 'Please input your display name!' }]}
                 >
-                    <Input onChange={handleName} />
+                    <Input onChange={(e) => setName(e.target.value)} />
                 </Form.Item>
                 <Form.Item
                     label="Email"

@@ -8,6 +8,7 @@ const { Option } = Select;
 
 export default (props) => {
     let tagInput;
+    const [fileList, setFileList] = useState([]);
     const IMG_UPLOAD_URL = `${ROOT_URL}/api/v1/articles/image?token=Token ${getToken()}`;
 
     useEffect(() => {
@@ -43,6 +44,7 @@ export default (props) => {
         }
         return e && e.fileList;
     };
+
     return (
         <Col xs={24} sm={24} md={8} >
             <Form.Item name="category" label="Category" rules={[{ required: true, message: 'Please select a category!' }]} hasFeedback>
@@ -96,7 +98,13 @@ export default (props) => {
                 </div>
             </Form.Item>
             <Form.Item getValueFromEvent={normFile} valuePropName="fileList" name="imageName" label="Image">
-                <Upload name="articleImage" action={IMG_UPLOAD_URL} listType="picture">
+                <Upload 
+                    name="articleImage" 
+                    action={IMG_UPLOAD_URL} 
+                    listType="picture"
+                    onChange={({fileList}) => setFileList([...fileList])}
+                    fileList={fileList}
+                >
                     <Button>
                         <UploadOutlined /> Click to upload
                     </Button>

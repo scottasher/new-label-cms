@@ -17,7 +17,7 @@ class AccountSettings extends Component {
       security: "Security Settings",
     };
     const key = location.pathname.replace(`${match.path}/`, '');
-    console.log(menuMap)
+    // console.log(menuMap)
     this.state = {
       mode: 'inline',
       menuMap,
