@@ -5,6 +5,8 @@ import AccountCenter from '../pages/Account/Center';
 import AccountSettings from '../pages/Account/Settings'; 
 import AdminUsers from '../pages/Admin/Users';
 import NewUser from '../pages/Admin/Users/New';
+import VideoCenter from '../pages/Videos';
+import NewVideo from '../pages/Videos/New';
 
 export default  [ 
     {
@@ -48,6 +50,36 @@ export default  [
     },
     {
         key: 3,
+        path: '/videos',
+        name: 'Video',
+        title: 'Videos',
+        routes: [
+            {
+                path:'/videos',
+                name: 'Videos',
+                title: 'All',
+                component: VideoCenter,
+                layout: 'main',
+            },
+            {
+                path:'/videos/:id/edit',
+                name: 'edit',
+                title: 'Edit',
+                component: NewVideo,    
+                layout: 'main',
+            },
+            {
+                path:'/videos/create',
+                name: 'create',
+                exact: true,
+                title: 'Upload',
+                component: NewVideo,        
+                layout: 'main',
+            },
+        ]
+    },
+    {
+        key: 4,
         path: '/account',
         name: 'Account',
         title: 'Account',
@@ -69,7 +101,7 @@ export default  [
         ]
     },
     {
-        key: 4,
+        key: 5,
         path: '/admin',
         name: 'Admin',
         title: 'Admin',

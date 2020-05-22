@@ -1,8 +1,7 @@
 import { formatISO, add, isAfter, parseISO } from 'date-fns';
 // import { addHours } from 'date-fns/add_hours';
 
-export function getAuthority(str) {
-
+export function getAuthority() {
   return sessionStorage.getItem('authority')
 }
 
@@ -43,4 +42,16 @@ export function setToken(token) {
 
   sessionStorage.setItem('tokDate', formatISO(new Date()))
   return mapTok
+}
+
+export function checkAuthority(authority) {
+  if(getAuthority() === authority) {
+    return true;
+  }
+
+  if(getAuthority() === "superAdmin") {
+    return true;
+  }
+
+  return false;
 }

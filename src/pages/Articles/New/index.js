@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Form, Row, Card, Tooltip, Tag, Spin, Col, Input } from 'antd';
 import Head from './Head';
 import FormRight from './FormRight';
 import { createArticle, fetchArticle, updateArticle, clearArticle } from '../../../actions/articles';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { EditorState, convertFromRaw, convertToRaw, ContentState, DefaultDraftBlockRenderMap } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+import { Map } from 'immutable';
+import EmbedWrapper from './EmbedWrapper';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './index.less';
-
 const colStyles = { paddingRight: 20 };
 
 function NewArticle(props) {
     let id;
     const [form] = Form.useForm();
-    const [editorState, setEditorState] = useState('');
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [tags, setTags] = useState([]);
     const [optionsVisible, setOptionsVisible] = useState(false);
     const [selectedMenuItem, setSelectedMenuItem] = useState('public');
@@ -21,21 +26,19 @@ function NewArticle(props) {
     const [inputVisible, setInputVisible] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [fileList, setFileList] = useState([]);
-
+    const [title, setTitle] = useState('');
+    console.log(editorState)
 
     useEffect(() => {
         id = props.match.params.id
         if(!id) {
-            props.clearArticle()
+           return props.clearArticle()
         }
         if(id) {
             props.fetchArticle(id)
+            initVals(props.article);
         }
-        initVals(props.article);
     }, [props.article.id]);
-
-
-    const handleDropMenu = () => setDropVisible(!dropVisible);
 
     const handlePublishChange = (e) => {
         setDropVisible(false)
@@ -43,9 +46,10 @@ function NewArticle(props) {
     }
 
     const onFinish = values => {
+        console.log(values)
         const newArticle = {
             title: values.title,
-            body: values.body,
+            body: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
             textSnippet: values.textSnippet,
             category: values.category,
             tags: tags.toString(),
@@ -66,12 +70,21 @@ function NewArticle(props) {
     };
 
     const initVals = (data) => {
-
-        if(!data) {
+        console.log('initVals', data)
+        if(!data.body) {
             return 
+        } else {
+            if(data.body.blocks) {
+                setEditorState(
+                    EditorState.createWithContent(
+                        convertFromRaw(data.body)
+                    ) 
+                )
+            }
         }
+        console.log(editorState)
         setTags(data.tags);
-        
+        setTitle(data.title);
         let imgPath;
         if(data.image && props.match.params) {
             imgPath = [{
@@ -84,7 +97,7 @@ function NewArticle(props) {
         }
         const init = {
             title: data.title,
-            body: data.body || '',
+            body: editorState,
             textSnippet: data.textSnippet,
             category: data.category,
             tags: data.tags,
@@ -104,12 +117,33 @@ function NewArticle(props) {
         setInputVisible(false);
         setInputValue('');
     };
+
     const handleClose = removedTag => {
         const newTags = tags.filter(tag => tag !== removedTag);
-
         setTags(newTags);
     };
 
+    const embedCallback = (res) => {
+        console.log('embedCallback', res)
+        return res
+    }
+
+    const onEditorStateChange = (editorState) => {
+        console.log('editorState', editorState)
+        setEditorState(editorState)
+    }
+
+    const blockRenderMap = Map({
+        'atomic': {
+            wrapper: <EmbedWrapper />,
+        },
+        'unstyled': {
+            element: 'p',
+            aliasedElements: ['p'],
+        }
+    });
+    const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
+    console.log(extendedBlockRenderMap)
     return (
         <Form 
             form={form}
@@ -120,8 +154,9 @@ function NewArticle(props) {
         >
             <Head 
                 {...props}
+                title={title}
                 handlePublishChange={handlePublishChange} 
-                handleDropMenu={handleDropMenu}
+                handleDropMenu={() => setDropVisible(!dropVisible)}
                 dropVisible={dropVisible}
                 optionsVisible={optionsVisible}
                 selectedMenuItem={selectedMenuItem}
@@ -146,9 +181,13 @@ function NewArticle(props) {
                             name="body"
                             rules={[{required: true, message: 'Please add a body!',},]}
                         >
-                            <ReactQuill 
-                                value={editorState}
-                                onChange={(text, delta, source, editor) => setEditorState(text)}
+                            <Editor
+                                blockRenderMap={extendedBlockRenderMap}
+                                editorState={editorState}
+                                wrapperClassName="wrapper-class"
+                                editorClassName="editor-class"
+                                toolbarClassName="toolbar-class"
+                                onEditorStateChange={onEditorStateChange}
                             />
                         </Form.Item>
                         <Form.Item

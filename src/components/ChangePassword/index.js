@@ -9,7 +9,7 @@ export default (props) => {
     return (
         <Form layout="inline" name="change-password" onFinish={handleSubmit}>
             <Form.Item name="password">
-                <Input placeholder="Enter new password"/>
+                <Input.Password placeholder="Enter new password"/>
             </Form.Item>
             <Form.Item>
                 <Button 

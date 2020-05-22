@@ -56,7 +56,7 @@ export default (props) => {
         <PageHeader
             style={{ background: '#fff', marginBottom: '13px' }}
             className="site-page-header"
-            title="Title"
+            title={props.title}
             onBack={(e) => props.history.push('/articles')}
             subTitle=""
             extra={[

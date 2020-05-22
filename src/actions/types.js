@@ -7,6 +7,10 @@ export const FETCH_USERS = 'fetch_users';
 export const FETCH_ARTICLES = 'fetch_articles';
 export const FETCH_ARTICLE = 'fetch_article';
 
+//VIDEOS
+export const FETCH_VIDEOS = 'fetch_videos'
+export const FETCH_VIDEO = 'fetch_video';
+
 // CATEGORIES
 export const FETCH_CATEGORIES = 'fetch_categories';
 

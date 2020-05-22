@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userLogout } from '../../actions/users';
 import { adminCollapse } from '../../actions/utils';
+import { checkAuthority } from '../../utils/authority';
 
 const RightContent = (props) => {
     const menu = (
@@ -21,7 +22,7 @@ const RightContent = (props) => {
                     <div className="user-drop-menu-text">Account Settings</div>
                 </Link>
             </Menu.Item>
-            {!props.currentUser.authority === "superAdmin" && "admin" ? null : (
+            {!checkAuthority("admin") ? null : (
                 <Menu.Item onClick={() => props.adminCollapse(!props.adminCollapsed)} key="/admin/settings">
                     <div>
                         <GlobalOutlined />

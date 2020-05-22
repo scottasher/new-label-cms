@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Spin } from 'antd';
+import { Redirect, Route } from 'react-router-dom';
 import { fetchCurrentUser } from './actions/users';
 import mainRoutes from './config/main.routes';
 import authRoutes from './config/auth.routes';
@@ -28,13 +28,16 @@ function App(props) {
             return <MainIndex {...route} currentUser={props.currentUser} exact path={route.path} component={route.component} key={key} />
         } 
         return route.routes.map(r => {
-            return <MainIndex {...route} currentUser={props.currentUser} children={r.children} exact path={r.path} component={r.component} key={r.path} />
+            return <MainIndex {...route} currentUser={props.currentUser} exact path={r.path} component={r.component} key={r.path} />
         });
     });
+
     return (
         <Switch>  
             {loginRoutes}
             {dashboardRoutes}
+            <Route path="/account" component={() => <Redirect to="/account/center" />} />
+            <Route path="/admin" component={() => <Redirect to="/admin/users" />} />
         </Switch>
     );
 }

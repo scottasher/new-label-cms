@@ -85,7 +85,9 @@ export const forgotPassword = values => async dispatch => {
 }
 
 export const changePassword = (values, token, history) => async dispatch => {
-    setToken(parseQuery(token).token);
+    if(token) {
+        setToken(parseQuery(token).token);
+    }
 
     dispatch({ type: FETCH_LOADING, payload: true});
 
